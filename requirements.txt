@@ -1,0 +1,1 @@
+streamlit==1.44.1\npandas==2.2.2\nnumpy==1.26.4\nmatplotlib==3.8.4\nscipy==1.13.0\nplotly==6.0.1
