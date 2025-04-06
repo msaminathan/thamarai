@@ -1,2 +1,1 @@
-# thamarai
-MPT
+# Modern Portfolio Theory Explorer
