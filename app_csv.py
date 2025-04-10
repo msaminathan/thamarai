@@ -7,7 +7,6 @@ import plotly.express as px
 from scipy.optimize import minimize
 import base64
 from io import BytesIO
-import yfinance as yf
 from streamlit_datetime_range_picker import datetime_range_picker
 import datetime
 import seaborn as sns
