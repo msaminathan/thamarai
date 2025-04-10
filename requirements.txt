@@ -6,3 +6,4 @@ scipy
 plotly
 streamlit-datetime-range-picker
 datetime
+seaborn
