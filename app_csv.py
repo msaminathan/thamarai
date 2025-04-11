@@ -121,7 +121,6 @@ def generate_sample_data(num_assets=10, num_observations=252):
     stocks = symbols[0:num_assets]
     start_date = pd.to_datetime(d1)   #'2018-01-01'
     end_date = pd.to_datetime(d2)     #'2023-01-01'
-    #prices = yf.download(stocks, start=start_date, end=end_date)['Close']
     prices = pd.read_csv("stocks.csv", index_col=0)
     prices.index = pd.to_datetime(prices.index)
     prices = prices[(prices.index >= start_date) & (prices.index <= end_date)]
@@ -1080,45 +1079,3 @@ st.markdown("""
     <p style="font-size: 0.8rem; color: #6c757d;">© 2025</p>
 </div>
 """, unsafe_allow_html=True)
-
-##  Generate actual data fr given stock symbols
-##  Data from yahoo finance
-def generate_sample_data(num_assets=10, num_observations=252):
-    """Generate sample return data for assets."""
-    # Create asset names
-    symbols = ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM']
-    asset_names = [symbols[i] for i in range(len(symbols))]
-    
-    # Generate random returns with different means and standard deviations
-    annual_returns = np.random.uniform(0.05, 0.15, num_assets)
-    daily_returns = annual_returns / num_observations
-    
-    annual_volatilities = np.random.uniform(0.10, 0.30, num_assets)
-    daily_volatilities = annual_volatilities / np.sqrt(num_observations)
-    
-    # Generate correlation matrix
-    corr_matrix = np.random.uniform(0.1, 0.7, (num_assets, num_assets))
-    corr_matrix = (corr_matrix + corr_matrix.T) / 2
-    np.fill_diagonal(corr_matrix, 1.0)
-    
-    # Ensure the matrix is positive-semidefinite
-    min_eig = np.min(np.linalg.eigvals(corr_matrix))
-    if min_eig < 0:
-        corr_matrix += np.eye(num_assets) * (abs(min_eig) + 1e-8)
-    
-    # Normalize to ensure it's a proper correlation matrix
-    D = np.diag(1.0 / np.sqrt(np.diag(corr_matrix)))
-    corr_matrix = D @ corr_matrix @ D
-    
-    # Generate returns using multivariate normal distribution
-    cov_matrix = np.outer(daily_volatilities, daily_volatilities) * corr_matrix
-    returns = np.random.multivariate_normal(
-        mean=daily_returns,
-        cov=cov_matrix,
-        size=num_observations
-    )
-    
-    # Convert to DataFrame
-    returns_df = pd.DataFrame(returns, columns=asset_names)
-    
-    return returns_df, corr_matrix
