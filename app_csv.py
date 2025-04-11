@@ -92,7 +92,7 @@ with st.sidebar:
     page = st.radio("", ["Introduction", "Mathematical Foundations", "Interactive Portfolio Optimizer", "Code Implementation", "About"])
     
     st.markdown("---")
-    st.markdown("Select parameters below and\n click checkbox below")	
+    st.markdown("Select parameters below and\n click checkbox")	
     st.markdown("### Parameters")
     if page == "Interactive Portfolio Optimizer":
       min_date = datetime.date(2015, 1, 1)
@@ -104,7 +104,7 @@ with st.sidebar:
       num_portfolios = st.slider("Number of Random Portfolios", min_value=1000, max_value=10000, value=5000, step=1000)
       symbols = st.multiselect("Choose Stocks:", ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'],
 		['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'])
-      opt = st.checkbox("Give me optimal porfolio",key="my_checkbox")
+      opt = st.checkbox("Compute optimal porfolio",key="my_checkbox")
       num_assets = len(symbols)
           
     st.markdown("---")
