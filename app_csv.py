@@ -401,12 +401,10 @@ def plot_correlation_matrix_plotly(corr_matrix, asset_names):
             fig.add_annotation(
                 x=j,
                 y=i,
-                #text=f"{corr_matrix[i, j]:.2f}",
-                text=f"{i+j:.2f}",
+                text=f"{corr_matrix.iloc[i, j]:.2f}",
                 showarrow=False,
                 font=dict(
-                    #color='white' if abs(corr_matrix[i, j]) > 0.5 else 'black'
-                    color='white' if abs(i+j) > 0.5 else 'black'
+			color='white' if abs(corr_matrix.iloc[i, j]) > 0.5 else 'black'
                 )
             )
     
