@@ -765,7 +765,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         # Display sample returns
         st.markdown('<h4 class="section-header">Sample Returns (First 10 Days)</h4>', unsafe_allow_html=True)
         st.dataframe(returns_df.head(10) * 100, use_container_width=True)
-        st.dataframe(returns_df.head())
+        st.dataframe(returns_df.cov())
         
     with tab5:        
         plt.figure()
