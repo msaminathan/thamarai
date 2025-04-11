@@ -763,7 +763,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         # Display sample returns
         st.markdown('<h4 class="section-header">Sample Returns (First 10 Days)</h4>', unsafe_allow_html=True)
         st.dataframe(returns_df.head(10) * 100, use_container_width=True)
-	st.markdown('<h4 class="section-header">Covariance Matrix</h4>', unsafe_allow_html=True)
+        st.markdown('<h4 class="section-header">Covariance Matrix</h4>', unsafe_allow_html=True)
         st.dataframe(returns_df.cov()*252 * 100, use_container_width=True)       
     with tab5:        
         plt.figure()
