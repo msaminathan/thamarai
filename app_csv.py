@@ -96,8 +96,8 @@ with st.sidebar:
     if page == "Interactive Portfolio Optimizer":
       min_date = datetime.date(2015, 1, 1)
       max_date = datetime.date(2025, 1, 1)
-      d1 = st.date_input("Start Date:", value=datetime.date(2018, 1, 1), min_value=min_date, max_value=max_date)
-      d2 = st.date_input("End Date:", value=datetime.date(2023, 1, 1), min_value=min_date, max_value=max_date)
+      d1 = st.date_input("Stocks History Start Date:", value=datetime.date(2018, 1, 1), min_value=min_date, max_value=max_date)
+      d2 = st.date_input("Stocks History End Date:", value=datetime.date(2023, 1, 1), min_value=min_date, max_value=max_date)
       #num_assets = st.slider("Number of Assets", min_value=3, max_value=12, value=10, step=1)
       risk_free_rate = st.slider("Risk-Free Rate (%)", min_value=0.0, max_value=5.0, value=2.0, step=0.1) / 100
       num_portfolios = st.slider("Number of Random Portfolios", min_value=1000, max_value=10000, value=5000, step=1000)
