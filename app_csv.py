@@ -92,6 +92,7 @@ with st.sidebar:
     page = st.radio("", ["Introduction", "Mathematical Foundations", "Interactive Portfolio Optimizer", "Code Implementation", "About"])
     
     st.markdown("---")
+    st.markdown("Select parameters below and\n click checkbox below")	
     st.markdown("### Parameters")
     if page == "Interactive Portfolio Optimizer":
       min_date = datetime.date(2015, 1, 1)
