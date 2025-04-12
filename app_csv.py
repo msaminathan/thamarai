@@ -96,7 +96,7 @@ with st.sidebar:
     st.markdown("### Parameters")
     if page == "Interactive Portfolio Optimizer":
       min_date = datetime.date(2015, 1, 1)
-      max_date = datetime.date(2025, 1, 1)
+      max_date = datetime.date(2025, 4, 9)
       d1 = st.date_input("Stocks History Start Date:", value=datetime.date(2018, 1, 1), min_value=min_date, max_value=max_date)
       d2 = st.date_input("Stocks History End Date:", value=datetime.date(2023, 1, 1), min_value=min_date, max_value=max_date)
       #num_assets = st.slider("Number of Assets", min_value=3, max_value=12, value=10, step=1)
@@ -463,6 +463,48 @@ def get_download_link(df, filename, text):
     href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">{text}</a>'
     return href
 
+# Function to calculate the portfolio's annualized risk (volatility)
+def portfolio_volatility(weights, returns):
+    return np.sqrt(np.dot(weights.T, np.dot(returns.cov() * 252, weights)))
+    
+# Function to calculate the portfolio's annualized return
+def portfolio_return(weights, returns):
+    return np.sum(returns.mean() * weights) * 252
+    
+# Function to minimize the negative Sharpe ratio
+def minimize_sharpe_ratio(weights, returns, risk_free_rate):
+    return -(portfolio_return(weights, returns) - risk_free_rate) / portfolio_volatility(weights, returns)
+    
+# Function to calculate efficient frontier
+def efficient_frontier_envelope(returns, risk_free_rate, num_portf=200):
+    num_assets = returns.shape[1]
+    init_guess = np.repeat(1 / num_assets, num_assets)
+    bounds = tuple((0, 1) for asset in range(num_assets))
+    constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
+    
+    # Find the portfolio weights that maximize the Sharpe ratio
+    optimal = minimize(minimize_sharpe_ratio, init_guess, args=(returns, risk_free_rate), bounds=bounds, constraints=constraints)
+    optimal_weights = optimal.x
+    # Calculate the target returns for the efficient frontier
+    #target_returns = np.linspace(portfolio_return(init_guess, returns), portfolio_return(optimal_weights, returns), num_portfolios)
+    min = returns.mean().min()*252
+    max = returns.mean().max()*252
+    target_returns = np.linspace(min, max, num_portf)
+    target_volatilities = []
+    weights_list = []
+    
+    for target_return in target_returns:
+        constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1},
+                       {'type': 'eq', 'fun': lambda x: portfolio_return(x, returns) - target_return})
+        
+        # Minimize portfolio volatility for each target return
+        result = minimize(portfolio_volatility, init_guess, args=(returns,), bounds=bounds, constraints=constraints)
+        target_volatilities.append(result.fun)
+        weights_list.append(result.x)
+    
+    return np.array(target_volatilities), target_returns, weights_list, optimal_weights, optimal
+    
+ 
 # Main content based on selected page
 if page == "Introduction":
     st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer</h1>', unsafe_allow_html=True)
@@ -768,6 +810,40 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         st.dataframe(returns_df.cov()*252 * 100, use_container_width=True)
         st.markdown('<h4 class="section-header">Correlation Matrix</h4>', unsafe_allow_html=True)
         st.dataframe(returns_df.corr(), use_container_width=True)
+        
+        target_volatilities, target_returns, weights_list, optimal_weights, optimal = \
+			efficient_frontier_envelope(returns_df, risk_free_rate, num_portf=200)
+			
+        st.write("Efficient Frontier")
+        plt.figure(figsize=(14,7))
+        plt.plot(target_volatilities, target_returns)
+        plt.grid(True)
+        plt.xlabel("Volatility")
+        plt.ylabel("Return")
+        
+        # Calculate annualized returns and volatilities of individual stocks
+        individual_returns = returns_df.mean() * 252
+        individual_volatilities = returns_df.std() * np.sqrt(252)
+        plt.scatter(individual_volatilities, individual_returns, marker='o', s=100)
+        # r1 = rets[max_index]
+        # v1 = volatilities[max_index]
+        # plt.scatter(v1,r1, marker='X', s=100, color='red')
+        # txt1 = 'Max Sharpe Ratio'
+        # plt.annotate(txt1, (v1, r1), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points')
+        for i, txt in enumerate(prices.columns):
+          plt.annotate(txt, (individual_volatilities[i], individual_returns[i]), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points')
+
+
+        plt.savefig("eff.png")
+        st.image("eff.png")
+        # Save the efficient frontier and the associated portfolio weights in a pandas DataFrame
+        ef_df = pd.DataFrame({'Volatility': target_volatilities, 'Expected Return': target_returns})
+        weights_df = pd.DataFrame(data=weights_list, columns=prices.columns)
+        sharpe_ratio = [(target_returns[i] - risk_free_rate)/target_volatilities[i] for i in range(len(target_returns))]
+        sr = pd.DataFrame(sharpe_ratio, columns=['Sharpe Ratio'])        
+        st.write("Weights along Efficient Frontier")
+        st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1), use_container_width=True)	
+        #pd.concat([df1, df2], axis=1)
     with tab5:        
         plt.figure()
         prices.plot(linewidth=0.5, title="Stocks History", grid=True)
