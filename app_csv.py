@@ -842,7 +842,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         sharpe_ratio = [(target_returns[i] - risk_free_rate)/target_volatilities[i] for i in range(len(target_returns))]
         sr = pd.DataFrame(sharpe_ratio, columns=['Sharpe Ratio'])        
         st.write("Weights along Efficient Frontier")
-        st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1), use_container_width=True)	
+        #st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1), use_container_width=True)	
         #pd.concat([df1, df2], axis=1)
     with tab5:        
         plt.figure()
