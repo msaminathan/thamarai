@@ -7,3 +7,4 @@ plotly
 streamlit-datetime-range-picker
 datetime
 seaborn
+random
