@@ -9,6 +9,7 @@ import base64
 from io import BytesIO
 import datetime
 import seaborn as sns
+import random
 
 # Set page configuration
 st.set_page_config(
@@ -102,10 +103,21 @@ with st.sidebar:
       #num_assets = st.slider("Number of Assets", min_value=3, max_value=12, value=10, step=1)
       risk_free_rate = st.slider("Risk-Free Rate (%)", min_value=0.0, max_value=5.0, value=2.0, step=0.1) / 100
       num_portfolios = st.slider("Number of Random Portfolios", min_value=1000, max_value=10000, value=5000, step=1000)
-      symbols = st.multiselect("Choose Stocks:", ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'],
+      symbols = st.multiselect("Choose at least 2 Stocks:", ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'],
 		['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'])
-      opt = st.checkbox("Compute optimal porfolio",key="my_checkbox")
+      rnd = 0
+      str1 = ""
+      if len(symbols) < 2:
+          symbols=random.sample(['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'], 2)
+          rnd = 1
+          str1 = "2 random " + str(symbols) + " have been selected"
       num_assets = len(symbols)
+      if rnd == 0:
+        st.write(str(num_assets) + " stock symbols " + str(symbols) + " selected for analysis")
+      else:
+        st.write(str1)
+		  
+      opt = st.checkbox("Compute optimal porfolio",key="my_checkbox")
           
     st.markdown("---")
     st.markdown("### Resources")
@@ -520,7 +532,7 @@ def highlight_row(df, row_index, color='yellow'):
     return df.style.apply(
         lambda x: ['background-color: {}'.format(color) if x.name == row_index else '' for i in x], axis=1
     )
-    
+  
 # Main content based on selected page
 if page == "Introduction":
     st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer</h1>', unsafe_allow_html=True)
