@@ -502,9 +502,25 @@ def efficient_frontier_envelope(returns, risk_free_rate, num_portf=200):
         target_volatilities.append(result.fun)
         weights_list.append(result.x)
     
-    return np.array(target_volatilities), target_returns, weights_list, optimal_weights, optimal
-    
+    return np.array(target_volatilities), target_returns, weights_list, optimal_weights, optimal   
  
+# Function to apply style based on a condition
+def highlight_row(df, row_index, color='yellow'):
+    """
+    Changes the background color of an entire row in a Pandas DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to modify.
+        row_index (int): The index of the row to highlight.
+        color (str, optional): The background color to apply. Defaults to 'yellow'.
+
+    Returns:
+         pd.io.formats.style.Styler: A Styler object with the applied style.
+    """
+    return df.style.apply(
+        lambda x: ['background-color: {}'.format(color) if x.name == row_index else '' for i in x], axis=1
+    )
+    
 # Main content based on selected page
 if page == "Introduction":
     st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer</h1>', unsafe_allow_html=True)
@@ -825,24 +841,42 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         individual_returns = returns_df.mean() * 252
         individual_volatilities = returns_df.std() * np.sqrt(252)
         plt.scatter(individual_volatilities, individual_returns, marker='o', s=100)
-        # r1 = rets[max_index]
-        # v1 = volatilities[max_index]
-        # plt.scatter(v1,r1, marker='X', s=100, color='red')
-        # txt1 = 'Max Sharpe Ratio'
-        # plt.annotate(txt1, (v1, r1), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points')
+
         for i, txt in enumerate(prices.columns):
           plt.annotate(txt, (individual_volatilities[i], individual_returns[i]), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points')
 
-
-        plt.savefig("eff.png")
-        st.image("eff.png")
         # Save the efficient frontier and the associated portfolio weights in a pandas DataFrame
         ef_df = pd.DataFrame({'Volatility': target_volatilities, 'Expected Return': target_returns})
         weights_df = pd.DataFrame(data=weights_list, columns=prices.columns)
         sharpe_ratio = [(target_returns[i] - risk_free_rate)/target_volatilities[i] for i in range(len(target_returns))]
         sr = pd.DataFrame(sharpe_ratio, columns=['Sharpe Ratio'])        
-        st.write("Weights along Efficient Frontier")
-        st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1).round(3), use_container_width=True)	
+        # st.write("Weights along Efficient Frontier")
+        # st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1).round(3), use_container_width=True)	
+
+        max_index = sr.idxmax()
+        r1 = target_returns[max_index]
+        v1 = target_volatilities[max_index]
+        plt.scatter(v1,r1, marker='X', s=100, color='red')
+        txt1 = 'Max Sharpe Ratio'
+        plt.annotate(txt1, (v1, r1), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points') 
+        
+        min_index = ef_df['Volatility'].idxmin()
+        r1 = target_returns[min_index]
+        v1 = target_volatilities[min_index]
+        plt.scatter(v1,r1, marker='X', s=100, color='red')
+        txt1 = 'Minimum Volatility'
+        plt.annotate(txt1, (v1, r1), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points') 
+                             
+        plt.savefig("eff.png")
+        st.image("eff.png")
+            
+        st.write("Weights(%) along Efficient Frontier")
+        temp = pd.concat([ef_df*100, sr, weights_df*100], axis=1)
+        temp1 = highlight_row(temp, int(max_index), color='lightblue')
+        #temp = highlight_row(temp, int(min_index), color='lightgreen')
+        st.write(temp1, use_container_width=True)
+        #st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1).round(3), use_container_width=True)	       
+        
     with tab5:        
         plt.figure()
         prices.plot(linewidth=0.5, title="Stocks History", grid=True)
