@@ -93,7 +93,7 @@ with st.sidebar:
     page = st.radio("", ["Introduction", "Mathematical Foundations", "Interactive Portfolio Optimizer", "Code Implementation", "About"])
     
     st.markdown("---")
-    st.markdown("Select parameters below and\n click checkbox")	
+    st.markdown("Select parameters below and\n click checkbox below")	
     st.markdown("### Parameters")
     if page == "Interactive Portfolio Optimizer":
       min_date = datetime.date(2015, 1, 1)
@@ -127,8 +127,6 @@ with st.sidebar:
     
 def generate_sample_data(num_assets=10, num_observations=252):
     """Generate sample return data for assets."""
-    #symbols = ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM']
-    # Create asset names
     asset_names = [f"Asset_{i+1}" for i in range(num_assets)]
     
     stocks = symbols[0:num_assets]
@@ -532,7 +530,7 @@ def highlight_row(df, row_index, color='yellow'):
     return df.style.apply(
         lambda x: ['background-color: {}'.format(color) if x.name == row_index else '' for i in x], axis=1
     )
-  
+
 # Main content based on selected page
 if page == "Introduction":
     st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer</h1>', unsafe_allow_html=True)
@@ -737,7 +735,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         results = optimize_portfolio(mean_returns, cov_matrix, num_portfolios=num_portfolios, risk_free_rate=risk_free_rate)
     
     # Display tabs for different visualizations
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Efficient Frontier", "Correlation Matrix", "Optimal Weights", "Asset Statistics",
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Efficient Frontier", "Correlation Matrix", "Optimal Weights", "Asset Stats/Growth",
 		"Stocks History"])
     
     with tab1:
@@ -815,7 +813,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
             st.markdown(get_download_link(weights_df_min_vol, 'min_vol_weights.csv', 'Download weights as CSV'), unsafe_allow_html=True)
     
     with tab4:
-        st.markdown('<h3 class="section-header">Asset Statistics</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-header">Asset Stats and Growth</h3>', unsafe_allow_html=True)
         
         # Display asset statistics
         stats_df = pd.DataFrame({
@@ -891,7 +889,37 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         selected_rows = temp.iloc[[int(max_index), int(min_index)]]
         selected_rows['Criteria'] = ['Max Sharpe \n Ratio', 'Minimum\nVolatitility']
         selected_rows.set_index('Criteria')
-        st.write(selected_rows.round(2))       
+        st.write(selected_rows.round(2))
+        
+        #Monitor growth of portfolio
+
+        stocks = symbols[0:num_assets]
+        start_date = pd.to_datetime(d1)   #'2018-01-01'
+        end_date = pd.to_datetime(d2)     #'2023-01-01'
+        prices2 = pd.read_csv("stocks.csv", index_col=0)
+        prices2.index = pd.to_datetime(prices2.index)
+        prices2 = prices2[(prices2.index > end_date)]
+    
+        prices2 = prices2[weights_df.columns]
+        initial_porfolio = np.dot(prices2.iloc[0], weights_df.iloc[int(max_index)])
+        plt.figure(figsize=(16,8))
+        plt.title("Porfolio Growth(%) - Maximum Sharpe Ratio")
+        plt.grid(True)
+        plt.xlabel("Time")
+        plt.ylabel("Portfolio Growth(%)")
+        plt.plot(prices2.index, 100.0*(np.dot(prices2, weights_df.iloc[int(max_index)]) / initial_porfolio - 1.0), label='Portfolio Growth(%)')       
+        plt.savefig("Growth1.png")
+        st.image("Growth1.png")
+        
+        initial_porfolio = np.dot(prices2.iloc[0], weights_df.iloc[int(min_index)])
+        plt.figure(figsize=(16,8))
+        plt.title("Porfolio Growth(%) - Minimum Volatility")
+        plt.grid(True)
+        plt.xlabel("Time")
+        plt.ylabel("Portfolio Growth(%)")
+        plt.plot(prices2.index, 100.0*(np.dot(prices2, weights_df.iloc[int(min_index)]) / initial_porfolio - 1.0), label='Portfolio Growth(%)')       
+        plt.savefig("Growth2.png")
+        st.image("Growth2.png")        
         
     with tab5:        
         plt.figure()
