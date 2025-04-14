@@ -884,10 +884,14 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
             
         st.write("Weights(%) along Efficient Frontier")
         temp = pd.concat([ef_df*100, sr, weights_df*100], axis=1)
-        temp1 = highlight_row(temp, int(max_index), color='lightblue')
-        #temp = highlight_row(temp, int(min_index), color='lightgreen')
-        st.write(temp1, use_container_width=True)
-        #st.dataframe(pd.concat([ef_df*100, sr, weights_df*100], axis=1).round(3), use_container_width=True)	       
+        #temp1 = highlight_row(temp, int(max_index), color='lightblue')
+        st.write(temp.round(2), use_container_width=True)
+        
+        st.write("Portfolio Compositions at Maximum Sharpe Ratio and Minimum Volatility")	
+        selected_rows = temp.iloc[[int(max_index), int(min_index)]]
+        selected_rows['Criteria'] = ['Max Sharpe \n Ratio', 'Minimum\nVolatitility']
+        selected_rows.set_index('Criteria')
+        st.write(selected_rows.round(2))       
         
     with tab5:        
         plt.figure()
