@@ -909,7 +909,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.ylabel("Portfolio Growth(%)")
         plt.plot(prices2.index, 100.0*(np.dot(prices2, weights_df.iloc[int(max_index)]) / initial_porfolio - 1.0), label='Portfolio Growth(%)')       
         plt.savefig("Growth1.png")
-        st.image("Growth1.png")
+        #st.image("Growth1.png")
         
         initial_porfolio = np.dot(prices2.iloc[0], weights_df.iloc[int(min_index)])
         plt.figure(figsize=(16,8))
@@ -919,7 +919,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.ylabel("Portfolio Growth(%)")
         plt.plot(prices2.index, 100.0*(np.dot(prices2, weights_df.iloc[int(min_index)]) / initial_porfolio - 1.0), label='Portfolio Growth(%)')       
         plt.savefig("Growth2.png")
-        st.image("Growth2.png")        
+        #st.image("Growth2.png")        
         
     with tab5:        
         plt.figure()
