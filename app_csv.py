@@ -885,7 +885,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         #temp1 = highlight_row(temp, int(max_index), color='lightblue')
         st.write(temp.round(2), use_container_width=True)
         
-        st.write("Portfolio Compositions at Maximum Sharpe Ratio and Minimum Volatility")	
+        st.write("Portfolio Compositions(%) at Maximum Sharpe Ratio and Minimum Volatility")	
         selected_rows = temp.iloc[[int(max_index), int(min_index)]]
         selected_rows['Criteria'] = ['Max Sharpe \n Ratio', 'Minimum\nVolatitility']
         selected_rows.set_index('Criteria')
@@ -901,25 +901,27 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         prices2 = prices2[(prices2.index > end_date)]
     
         prices2 = prices2[weights_df.columns]
-        initial_porfolio = np.dot(prices2.iloc[0], weights_df.iloc[int(max_index)])
+        nshares = weights_df.iloc[int(max_index)]/prices2.iloc[0]
+        initial_porfolio = np.dot(prices2.iloc[0], nshares)
         plt.figure(figsize=(16,8))
-        plt.title("Porfolio Growth(%) - Maximum Sharpe Ratio")
+        plt.title("Porfolio Growth(%) - Maximum Sharpe Ratio Since "  + str(prices2.index[0]))
         plt.grid(True)
         plt.xlabel("Time")
         plt.ylabel("Portfolio Growth(%)")
-        plt.plot(prices2.index, 100.0*(np.dot(prices2, weights_df.iloc[int(max_index)]) / initial_porfolio - 1.0), label='Portfolio Growth(%)')       
+        plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Portfolio Growth(%)')              
         plt.savefig("Growth1.png")
-        #st.image("Growth1.png")
+        st.image("Growth1.png")
         
-        initial_porfolio = np.dot(prices2.iloc[0], weights_df.iloc[int(min_index)])
+        nshares = weights_df.iloc[int(min_index)]/prices2.iloc[0]
+        initial_porfolio = np.dot(prices2.iloc[0], nshares)
         plt.figure(figsize=(16,8))
-        plt.title("Porfolio Growth(%) - Minimum Volatility")
+        plt.title("Porfolio Growth(%) - Minimum Volatility since " + str(prices2.index[0]))
         plt.grid(True)
         plt.xlabel("Time")
         plt.ylabel("Portfolio Growth(%)")
-        plt.plot(prices2.index, 100.0*(np.dot(prices2, weights_df.iloc[int(min_index)]) / initial_porfolio - 1.0), label='Portfolio Growth(%)')       
+        plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Portfolio Growth(%)  sss')       
         plt.savefig("Growth2.png")
-        #st.image("Growth2.png")        
+        st.image("Growth2.png")        
         
     with tab5:        
         plt.figure()
