@@ -13,7 +13,7 @@ import random
 
 # Set page configuration
 st.set_page_config(
-    page_title="Modern Portfolio Theory Explorer\nAn Illustration Using DOW Industrials",
+    page_title="Modern Portfolio Theory Explorer",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -86,7 +86,7 @@ st.markdown("""
 with st.sidebar:
     # st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Markowitz_frontier.svg/440px-Markowitz_frontier.svg.png", 
              # caption="Efficient Frontier Concept")
-    st.title("Modern Portfolio Theory")
+    st.title("Modern Portfolio Theory\nAn Illustration Using DOW Industrials")
     st.markdown("---")
     
     st.markdown("### Navigation")
