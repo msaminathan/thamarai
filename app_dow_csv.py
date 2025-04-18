@@ -13,7 +13,7 @@ import random
 
 # Set page configuration
 st.set_page_config(
-    page_title="Modern Portfolio Theory Explorer",
+    page_title="Modern Portfolio Theory Explorer\nAn Illustration Using DOW Industrials",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
