@@ -13,7 +13,7 @@ import random
 
 # Set page configuration
 st.set_page_config(
-    page_title="Modern Portfolio Theory Explorer",
+    page_title="Modern Portfolio Theory Explorer\nAn Illustration Using DOW Industrials",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -538,7 +538,7 @@ def highlight_row(df, row_index, color='yellow'):
 
 # Main content based on selected page
 if page == "Introduction":
-    st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer\nAn Illustration Using DOW Industrials</h1>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
