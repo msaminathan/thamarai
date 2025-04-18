@@ -86,7 +86,7 @@ st.markdown("""
 with st.sidebar:
     # st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Markowitz_frontier.svg/440px-Markowitz_frontier.svg.png", 
              # caption="Efficient Frontier Concept")
-    st.title("Modern Portfolio Theory")
+    st.title("Modern Portfolio Theory\n\nAn Illustration Using a dozen stocks")
     st.markdown("---")
     
     st.markdown("### Navigation")
@@ -537,7 +537,7 @@ def highlight_row(df, row_index, color='yellow'):
 
 # Main content based on selected page
 if page == "Introduction":
-    st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer\n\nAn Illustration Using a Dozen Stocks</h1>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
