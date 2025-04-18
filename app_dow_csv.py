@@ -93,9 +93,11 @@ with st.sidebar:
     page = st.radio("", ["Introduction", "Mathematical Foundations", "Interactive Portfolio Optimizer", "Code Implementation", "About"])
     
     st.markdown("---")
-    st.markdown("Select parameters and\n click checkbox below")	
-    st.markdown("### Parameters")
+    #st.markdown("Select parameters and\n click checkbox below")	
+    #st.markdown("### Parameters")
     if page == "Interactive Portfolio Optimizer":
+      st.markdown("### Parameters")
+      st.markdown("Select parameters and\n click checkbox below")
       min_date = datetime.date(2015, 1, 1)
       max_date = datetime.date(2025, 4, 9)
       d1 = st.date_input("Stocks History Start Date:", value=datetime.date(2018, 1, 1), min_value=min_date, max_value=max_date)
