@@ -111,10 +111,10 @@ with st.sidebar:
 		['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'])
       rnd = 0
       str1 = ""
-      if len(symbols) < 2:
-          symbols=random.sample(['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'], 2)
+      if len(symbols) < 3:
+          symbols=random.sample(['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'], 3)
           rnd = 1
-          str1 = "2 random " + str(symbols) + " have been selected"
+          str1 = "3 random " + str(symbols) + " have been selected"
       num_assets = len(symbols)
       if rnd == 0:
         st.write(str(num_assets) + " stock symbols " + str(symbols) + " selected for analysis")
