@@ -114,10 +114,10 @@ with st.sidebar:
 
       rnd = 0
       str1 = ""
-      if len(symbols) < 2:
-          symbols=random.sample(list(stocks_list), 2)
+      if len(symbols) < 3:
+          symbols=random.sample(list(stocks_list), 3)
           rnd = 1
-          str1 = "2 random DOW stocks " + str(symbols) + " have been selected"
+          str1 = "3 random DOW stocks " + str(symbols) + " have been selected"
       num_assets = len(symbols)
       if rnd == 0:
         st.write(str(num_assets) + " DOW stock symbols " + str(symbols) + " selected for analysis")
