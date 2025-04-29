@@ -107,7 +107,7 @@ with st.sidebar:
       #num_assets = st.slider("Number of Assets", min_value=3, max_value=12, value=10, step=1)
       risk_free_rate = st.slider("Risk-Free Rate (%)", min_value=0.0, max_value=5.0, value=2.0, step=0.1) / 100
       num_portfolios = st.slider("Number of Random Portfolios", min_value=1000, max_value=10000, value=5000, step=1000)
-      symbols = st.multiselect("Choose at least 2 Stocks:", ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'],
+      symbols = st.multiselect("Choose at least 3 Stocks:", ['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'],
 		['GOOG', 'MSFT', 'AMZN', 'TSLA','AAPL', 'META','GM', 'NKE', 'JNJ','T','BAC','JPM'])
       rnd = 0
       str1 = ""
