@@ -110,7 +110,7 @@ with st.sidebar:
       prices.index = pd.to_datetime(prices.index)
       stocks_list = prices.columns
       
-      symbols = st.multiselect("Choose at least 2 DOW Stocks:", stocks_list, stocks_list)
+      symbols = st.multiselect("Choose at least 3 DOW Stocks:", stocks_list, stocks_list)
 
       rnd = 0
       str1 = ""
