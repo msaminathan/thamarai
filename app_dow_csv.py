@@ -158,7 +158,7 @@ def view_stock_history(stockfilename):
     filtered_df = df[selected_companies]
 
     # Create the Matplotlib figure and axes
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(8, 6))
     ax.tick_params(axis='x', labelrotation=45)
 
     # Plot the close price history for each selected company
