@@ -163,7 +163,7 @@ def view_stock_history(stockfilename):
 
     # Plot the close price history for each selected company
     for company in filtered_df.columns:
-        ax.plot(filtered_df.index, filtered_df[company], label=company, lw=1)
+        ax.plot(filtered_df.index, filtered_df[company], label=company, lw=0.5)
 
     # Add labels and title
     ax.set_xlabel("Date")
