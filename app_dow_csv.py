@@ -13,7 +13,7 @@ import random
 
 # Set page configuration
 st.set_page_config(
-    page_title="Modern Portfolio Theory Explorer\nAn Illustration Using DOW Industrials",
+    page_title="Modern Portfolio Theory Explorer",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -86,18 +86,16 @@ st.markdown("""
 with st.sidebar:
     # st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Markowitz_frontier.svg/440px-Markowitz_frontier.svg.png", 
              # caption="Efficient Frontier Concept")
-    st.title("Modern Portfolio Theory\nAn Illustration Using DOW Industrials")
-    st.markdown("---")
-    
+    st.title("Modern Portfolio Theory\nAn Illustration Using Dow Jones Industrials")
+    st.markdown("---")   
     st.markdown("### Navigation")
-    page = st.radio("", ["Introduction", "Mathematical Foundations", "Interactive Portfolio Optimizer", "Code Implementation", "About"])
-    
+    page = st.radio("", ["Introduction", "Mathematical Foundations", "Interactive Portfolio Optimizer","Stocks Price History", "Code Implementation", "About"])   
     st.markdown("---")
-    #st.markdown("Select parameters and\n click checkbox below")	
-    #st.markdown("### Parameters")
+    # st.markdown("Select parameters and\n click checkbox below")	
+    # st.markdown("### Parameters")
     if page == "Interactive Portfolio Optimizer":
       st.markdown("### Parameters")
-      st.markdown("Select parameters and\n click checkbox below")
+      st.markdown("Select parameters and\n click checkbox below")	
       min_date = datetime.date(2015, 1, 1)
       max_date = datetime.date(2025, 4, 9)
       d1 = st.date_input("Stocks History Start Date:", value=datetime.date(2018, 1, 1), min_value=min_date, max_value=max_date)
@@ -131,6 +129,66 @@ with st.sidebar:
     st.markdown("[Markowitz's Original Paper](https://www.jstor.org/stable/2975974)")
     st.markdown("[Wikipedia: Modern Portfolio Theory](https://en.wikipedia.org/wiki/Modern_portfolio_theory)")
     st.markdown("[Investopedia: MPT](https://www.investopedia.com/terms/m/modernportfoliotheory.asp)")
+    
+def view_stock_history(stockfilename):
+  # Load the CSV data
+  df = pd.read_csv(stockfilename)
+  # Convert 'Date' column to datetime objects
+  df['Date'] = pd.to_datetime(df['Date'])
+  
+  df = df.set_index('Date')  
+  min_date = datetime.date(2015, 1, 1)
+  max_date = datetime.date.today()
+  d1 = st.date_input("Stocks History Start Date:", value=datetime.date(2015, 1, 1), min_value=min_date, max_value=max_date)
+  d2 = st.date_input("Stocks History End Date:", value=datetime.date.today(), min_value=min_date, max_value=max_date)
+  start_date = pd.to_datetime(d1)   #'2018-01-01'
+  end_date = pd.to_datetime(d2)     #'2023-01-01'
+  df = df[(df.index >= start_date) & (df.index <= end_date)]
+
+
+
+  # Get the list of company names (excluding the 'Date' column)
+  company_names = df.columns.tolist()
+
+  # Create a multiselect widget for company selection
+  selected_companies = st.multiselect("Select companies to display:", company_names, default=company_names[:3])
+
+  # Filter the DataFrame based on the selected companies
+  if selected_companies:
+    filtered_df = df[selected_companies]
+
+    # Create the Matplotlib figure and axes
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.tick_params(axis='x', labelrotation=45)
+
+    # Plot the close price history for each selected company
+    for company in filtered_df.columns:
+        ax.plot(filtered_df.index, filtered_df[company], label=company, lw=1)
+
+    # Add labels and title
+    ax.set_xlabel("Date")
+    ax.set_ylabel("Close Price")
+    ax.set_title("Daily Stock Close Price History")
+    ax.legend()
+    ax.grid(True)
+    fig.tight_layout()
+
+    # Display the Matplotlib chart in Streamlit
+    st.pyplot(fig)
+    st.write("Stocks price history")
+    st.dataframe(filtered_df)
+    mean_row = pd.DataFrame(filtered_df.pct_change().dropna().mean().values.reshape(1, -1),
+                            columns=filtered_df.pct_change().dropna().mean().index,
+                            index=['Annual Pct Return'])
+
+    std_row = pd.DataFrame(filtered_df.pct_change().dropna().std().values.reshape(1, -1),
+                            columns=filtered_df.pct_change().dropna().std().index,
+                            index=['Annual Std'])
+
+    st.write(pd.concat([100*252*mean_row, np.sqrt(100*252*std_row)]))                     
+  else:
+    st.warning("Please select at least one company to display.")
+    
     
 def generate_sample_data(num_assets=10, num_observations=252):
     """Generate sample return data for assets."""
@@ -538,9 +596,14 @@ def highlight_row(df, row_index, color='yellow'):
         lambda x: ['background-color: {}'.format(color) if x.name == row_index else '' for i in x], axis=1
     )
 
+# Display price history of selected stocks
+if page == "Stocks Price History":
+	st.markdown('<h2 class="sub-header">View stocks history of selected DOW stocks</h2>', unsafe_allow_html=True)
+	view_stock_history("dowjones.csv")
+
 # Main content based on selected page
 if page == "Introduction":
-    st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer\n\nAn Illustration Using DOW Industrials</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Modern Portfolio Theory Explorer\n\nAn Illustration Using Dow Jones Industrials</h1>', unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
     
@@ -1164,6 +1227,7 @@ def plot_efficient_frontier_plotly(results, risk_free_rate=0.01, asset_names=Non
     b64 = base64.b64encode(code.encode()).decode()
     href = f'<a href="data:file/python;base64,{b64}" download="mpt_streamlit_app.py">Download Complete Code</a>'
     st.markdown(href, unsafe_allow_html=True)
+    		   
 
 elif page == "About":
     st.markdown('<h1 class="main-header">About This Application</h1>', unsafe_allow_html=True)
