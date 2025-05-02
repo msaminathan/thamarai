@@ -171,6 +171,7 @@ def view_stock_history(stockfilename):
     ax.set_title("Daily Stock Close Price History")
     ax.legend()
     ax.grid(True)
+    plt.rc('font', size=20)
     fig.tight_layout()
 
     # Display the Matplotlib chart in Streamlit
