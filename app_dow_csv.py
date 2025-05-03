@@ -176,7 +176,7 @@ def view_stock_history(stockfilename):
     plt.xticks(fontsize=6)  # Set x-axis tick labels font size
     plt.yticks(fontsize=6)  # Set y-axis tick labels font size	  
 	  
-    ax.legend()
+    ax.legend(fontsize=6)
     ax.grid(True)
     #plt.rc('font', size=20)
     fig.tight_layout()
