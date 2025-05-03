@@ -151,8 +151,8 @@ def view_stock_history(stockfilename):
   company_names = df.columns.tolist()
 
   # Create a multiselect widget for company selection
-  selected_companies = st.multiselect("Select companies to display:", company_names, default=company_names[:3])
-
+  #selected_companies = st.multiselect("Select companies to display:", company_names, default=company_names[:3])
+  selected_companies = st.multiselect("Select companies to display:", company_names, default=random.sample(company_names))
   # Filter the DataFrame based on the selected companies
   if selected_companies:
     filtered_df = df[selected_companies]
