@@ -990,7 +990,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         nshares = weights_df.iloc[int(min_index)]/prices2.iloc[0]
         initial_porfolio = np.dot(prices2.iloc[0], nshares)         
         plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Minimum Volatility')
-	plt.tick_params(axis='x', labelrotation=45)    
+        plt.tick_params(axis='x', labelrotation=45)    
         plt.legend()
         plt.savefig("Growth.png")
         st.image("Growth.png")
