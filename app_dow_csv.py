@@ -168,7 +168,14 @@ def view_stock_history(stockfilename):
     # Add labels and title
     ax.set_xlabel("Date")
     ax.set_ylabel("Close Price")
+	  
     ax.set_title("Daily Stock Close Price History")
+    plt.title("Daily Stock Close Price History", fontsize=6)  # Set title font size
+    plt.xlabel("Date", fontsize=6)  # Set x-axis label font size
+    plt.ylabel("Close Price", fontsize=6)  # Set y-axis label font size
+    plt.xticks(fontsize=6)  # Set x-axis tick labels font size
+    plt.yticks(fontsize=6)  # Set y-axis tick labels font size	  
+	  
     ax.legend()
     ax.grid(True)
     #plt.rc('font', size=20)
