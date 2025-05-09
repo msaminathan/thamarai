@@ -981,11 +981,18 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         prices2 = prices2[weights_df.columns]
         nshares = weights_df.iloc[int(max_index)]/prices2.iloc[0]
         initial_porfolio = np.dot(prices2.iloc[0], nshares)
-        plt.figure(figsize=(10,5))
+        plt.figure(figsize=(10,6))
         plt.title("Porfolio Growth(%) - Since "  + str(prices2.index[0]))
         plt.grid(True)
-        plt.xlabel("Time")
-        plt.ylabel("Portfolio Growth(%)")
+        plt.xlabel("Time", fontsize=7)
+        plt.ylabel("Portfolio Growth(%)", fontsize=7)
+        plt.xticks(fontsize=7)
+        plt.yticks(fontsize=6)	    
+        #plt.figure(figsize=(10,5))
+        #plt.title("Porfolio Growth(%) - Since "  + str(prices2.index[0]))
+        #plt.grid(True)
+        #plt.xlabel("Time")
+        #plt.ylabel("Portfolio Growth(%)")
         plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Maximum Sharpe Ratio')
         nshares = weights_df.iloc[int(min_index)]/prices2.iloc[0]
         initial_porfolio = np.dot(prices2.iloc[0], nshares)         
