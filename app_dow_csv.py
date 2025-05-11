@@ -989,7 +989,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Maximum Sharpe Ratio')
         nshares = weights_df.iloc[int(min_index)]/prices2.iloc[0]
         initial_porfolio = np.dot(prices2.iloc[0], nshares)         
-        plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Minimum Volatility')
+        plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Minimum Volatility', lw=0.5
         plt.tick_params(axis='x', labelrotation=30)    
         plt.legend(fontsize=7)
         st.pyplot(plt)
