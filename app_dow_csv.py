@@ -982,7 +982,6 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.figure(figsize=(10,6))
         plt.title("Porfolio Growth(%) - Since "  + str(prices2.index[0]), fontsize=7)
         plt.grid(True)
-        plt.legend(fontsize=7)
         plt.xlabel("Time", fontsize=7)
         plt.ylabel("Portfolio Growth(%)", fontsize=7)
         plt.xticks(fontsize=7)
@@ -992,7 +991,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         initial_porfolio = np.dot(prices2.iloc[0], nshares)         
         plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Minimum Volatility')
         plt.tick_params(axis='x', labelrotation=30)    
-        plt.legend()
+        plt.legend(fontsize=7)
         st.pyplot(plt)
                 
     with tab5:        
