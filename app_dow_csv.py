@@ -996,13 +996,13 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
                 
     with tab5:        
         plt.figure()
-        prices.plot(linewidth=0.5, title="Stocks History", grid=True, fontsize=6)
+        prices.plot(linewidth=0.7, title="Stocks History", grid=True, fontsize=6)
         st.pyplot(plt)
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
         
         plt.figure()
-        returns_df.plot(linewidth=0.5,  title="Daily Returns", grid=True)
+        returns_df.plot(linewidth=0.7,  title="Daily Returns", grid=True)
         plt.savefig("returns.png")
         st.image("returns.png")
 		
