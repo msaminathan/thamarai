@@ -980,7 +980,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         nshares = weights_df.iloc[int(max_index)]/prices2.iloc[0]
         initial_porfolio = np.dot(prices2.iloc[0], nshares)
         plt.figure(figsize=(10,6))
-        plt.title("Porfolio Growth(%) - Since "  + str(prices2.index[0]))
+        plt.title("Porfolio Growth(%) - Since "  + str(prices2.index[0]), fontsize=7)
         plt.grid(True)
         plt.xlabel("Time", fontsize=7)
         plt.ylabel("Portfolio Growth(%)", fontsize=7)
