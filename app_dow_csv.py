@@ -954,9 +954,6 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.scatter(v1,r1, marker='X', s=100, color='red')
         txt1 = 'Minimum Volatility'
         plt.annotate(txt1, (v1, r1), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points') 
-                             
-        #plt.savefig("eff.png")
-        #st.image("eff.png")
         st.pyplot(plt)
             
         st.write("Weights(%) along Efficient Frontier")
@@ -995,15 +992,11 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Minimum Volatility')
         plt.tick_params(axis='x', labelrotation=30)    
         plt.legend()
-        #plt.savefig("Growth.png")
-        #st.image("Growth.png")
         st.pyplot(plt)
                 
     with tab5:        
         plt.figure()
-        prices.plot(linewidth=0.5, title="Stocks History", grid=True)
-        #plt.savefig("history.png")
-        #st.image("history.png")
+        prices.plot(linewidth=0.5, title="Stocks History", grid=True, fontsize=6)
         st.pyplot(plt)
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
