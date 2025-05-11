@@ -957,7 +957,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
                              
         #plt.savefig("eff.png")
         #st.image("eff.png")
-	st.pyplot(plt)
+        st.pyplot(plt)
             
         st.write("Weights(%) along Efficient Frontier")
         temp = pd.concat([ef_df*100, sr, weights_df*100], axis=1)
@@ -1002,8 +1002,9 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
     with tab5:        
         plt.figure()
         prices.plot(linewidth=0.5, title="Stocks History", grid=True)
-        plt.savefig("history.png")
-        st.image("history.png")
+        #plt.savefig("history.png")
+        #st.image("history.png")
+        st.pyplot(plt)
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
         
