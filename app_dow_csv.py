@@ -995,8 +995,9 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.plot(prices2.index, 100.0*(np.dot(prices2, nshares) / initial_porfolio - 1.0), label='Minimum Volatility')
         plt.tick_params(axis='x', labelrotation=30)    
         plt.legend()
-        plt.savefig("Growth.png")
-        st.image("Growth.png")
+        #plt.savefig("Growth.png")
+        #st.image("Growth.png")
+	st.pyplot(plt)
                 
     with tab5:        
         plt.figure()
