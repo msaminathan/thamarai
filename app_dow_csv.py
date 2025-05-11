@@ -995,10 +995,12 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         st.pyplot(plt)
                 
     with tab5:        
-        plt.figure(figsize=(6,4))
+        plt.figure(figsize=(4,3))
         prices.plot(linewidth=0.5, title="Stocks History", grid=True)
         plt.xlabel("Date", fontsize=6)
         plt.xticks(fontsize=6)
+        plt.ylabel(fontsize=6)
+        plt.yticks(fontsize=6)
         st.pyplot(plt)
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
