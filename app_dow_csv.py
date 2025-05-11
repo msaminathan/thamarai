@@ -955,8 +955,9 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         txt1 = 'Minimum Volatility'
         plt.annotate(txt1, (v1, r1), fontsize=10, fontweight='bold', xytext=(10, 0), textcoords='offset points') 
                              
-        plt.savefig("eff.png")
-        st.image("eff.png")
+        #plt.savefig("eff.png")
+        #st.image("eff.png")
+	st.pyplot(plt)
             
         st.write("Weights(%) along Efficient Frontier")
         temp = pd.concat([ef_df*100, sr, weights_df*100], axis=1)
