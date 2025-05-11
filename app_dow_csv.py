@@ -996,15 +996,16 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
                 
     with tab5:        
         plt.figure()
-        prices.plot(linewidth=0.7, title="Stocks History", grid=True, fontsize=6)
+        prices.plot(linewidth=0.7, title="Stocks History", grid=True)
         st.pyplot(plt)
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
         
         plt.figure()
         returns_df.plot(linewidth=0.7,  title="Daily Returns", grid=True)
-        plt.savefig("returns.png")
-        st.image("returns.png")
+        st.pyplot(plt)
+        #plt.savefig("returns.png")
+        #st.image("returns.png")
 		
 elif page == "Code Implementation":
     st.markdown('<h1 class="main-header">Python Implementation of MPT</h1>', unsafe_allow_html=True)
