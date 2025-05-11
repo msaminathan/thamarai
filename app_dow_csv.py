@@ -997,7 +997,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         plt.legend()
         #plt.savefig("Growth.png")
         #st.image("Growth.png")
-	st.pyplot(plt)
+        st.pyplot(plt)
                 
     with tab5:        
         plt.figure()
