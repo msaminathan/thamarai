@@ -995,8 +995,9 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         st.pyplot(plt)
                 
     with tab5:        
-        plt.figure(figsize=(6,4))
-        prices.plot(linewidth=0.5, title="Stocks History1", grid=True)
+        #plt.figure(figsize=(6,4))
+        plt.rcParams["figure.figsize"] = (7, 5)
+        prices.plot(linewidth=0.5, title="Stocks History", grid=True)
         plt.xlabel("Date", fontsize=6)
         plt.xticks(fontsize=6)
         plt.ylabel("Price", fontsize=6)
