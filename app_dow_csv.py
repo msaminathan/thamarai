@@ -996,6 +996,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
                 
     with tab5:        
         #plt.figure(figsize=(6,4))
+        plt.clf()
         plt.rcParams["figure.figsize"] = (5, 3)
         prices.plot(linewidth=0.5, title="Stocks History", grid=True)
         plt.xlabel("Date")
@@ -1007,6 +1008,7 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
         
+        plt.clf()
         plt.figure(figsize=(6,4))
         returns_df.plot(linewidth=0.5,  title="Daily Returns", grid=True)
         st.pyplot(plt)
