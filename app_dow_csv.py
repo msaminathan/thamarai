@@ -1003,7 +1003,9 @@ elif page == "Interactive Portfolio Optimizer" and opt == True:
         #plt.xticks(fontsize=6)
         plt.ylabel("Price")
         #plt.yticks(fontsize=6)
-        st.pyplot(plt)
+        #st.pyplot(plt)
+        plt.savefig("history.png")
+        st.image("history.png")
 	    
         st.write("Stocks Price History : " + str(start_date) + " to " + str(end_date))
         st.write(prices.round(3))
