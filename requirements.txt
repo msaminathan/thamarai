@@ -8,3 +8,4 @@ streamlit-datetime-range-picker
 datetime
 seaborn
 yfinance
+scikit-learn
