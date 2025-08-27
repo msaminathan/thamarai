@@ -39,7 +39,7 @@ def math_foundation_page():
 
     # Section 2: Variance
     st.markdown(r"""
-    **2. Variance of a Portfolio ($\sigma_p^2$):**
+    **2. Variance of a Portfolio ($\\sigma_p^2$):**
     The variance of a portfolio measures its overall risk. It considers not only the variance of individual assets but also the covariance between them.
     """)
     st.latex(r'\sigma_p^2 = \sum_{i=1}^{n} w_i^2 \sigma_i^2 + \sum_{i=1}^{n} \sum_{j=1, i \neq j}^{n} w_i w_j \sigma_{ij}')
@@ -77,9 +77,9 @@ def math_foundation_page():
     To express the optimization problem more concisely, we can use matrix notation:
     - Let $\mathbf{w}$ be the vector of portfolio weights: $\mathbf{w} = [w_1, w_2, ..., w_n]^T$
     - Let $\mathbf{R}$ be the vector of expected returns: $\mathbf{R} = [E(R_1), E(R_2), ..., E(R_n)]^T$
-    - Let $\mathbf{\Sigma}$ be the covariance matrix of returns.
+    - Let $\mathbf{\\Sigma}$ be the covariance matrix of returns.
 
-    The expected return of the portfolio is then $E(R_p) = \mathbf{w}^T \mathbf{R}$, and the portfolio variance is $\sigma_p^2 = \mathbf{w}^T \mathbf{\Sigma} \mathbf{w}$.
+    The expected return of the portfolio is then $E(R_p) = \mathbf{w}^T \mathbf{R}$, and the portfolio variance is $\sigma_p^2 = \mathbf{w}^T \mathbf{\\Sigma} \mathbf{w}$.
 
     **Objective Function:**
     The goal is to minimize the portfolio variance:
@@ -96,6 +96,67 @@ def math_foundation_page():
     st.latex(r'\mathbf{w}^T \mathbf{R} = E(R_{\text{target}})')
     st.markdown(r"3. **The weights of all assets must be non-negative (no short selling):**")
     st.latex(r'w_i \geq 0 \quad \forall i \in \{1, ..., n\}')
+
+def step_by_step_page():
+    st.header("Step-by-Step Guide: Math & Code")
+
+    st.markdown("""
+    This page walks through the mathematical concepts of Modern Portfolio Theory and shows the corresponding Python code used to perform the calculations.
+    """)
+
+    if 'all_stock_data' not in st.session_state or st.session_state.all_stock_data.empty:
+        st.warning("Please go to the 'MPT Analysis' page to select stocks and a date range.")
+        return
+
+    all_stock_data = st.session_state.all_stock_data
+
+    st.subheader("1. Historical Data Retrieval")
+    st.markdown("The first step is to retrieve historical stock data from Yahoo Finance for the selected stocks and date range.")
+    st.code("all_stock_data = get_stock_data(selected_stocks, start_date, end_date)")
+    st.dataframe(all_stock_data.head())
+
+    st.subheader("2. Expected Annual Returns")
+    st.markdown("The expected return of a portfolio is the weighted average of the expected returns of the individual assets in the portfolio.")
+    st.latex(r'E(R_p) = \sum_{i=1}^{n} w_i E(R_i)')
+    st.code("""daily_returns = all_stock_data.pct_change().dropna()\nannual_returns = daily_returns.mean() * 252""")
+    daily_returns = all_stock_data.pct_change().dropna()
+    annual_returns = daily_returns.mean() * 252
+    st.dataframe(annual_returns.to_frame(name="Annualized Expected Return"))
+
+    st.subheader("3. Covariance Matrix")
+    st.markdown("The covariance matrix measures the degree to which returns on two assets move in tandem.")
+    st.latex(r'\sigma_{ij} = \text{Cov}(R_i, R_j)')
+    st.code("annual_cov_matrix = daily_returns.cov() * 252")
+    annual_cov_matrix = daily_returns.cov() * 252
+    st.dataframe(annual_cov_matrix)
+
+    st.subheader("4. Portfolio Return & Volatility")
+    st.markdown("The return and volatility of a portfolio are calculated as follows:")
+    st.latex(r'E(R_p) = w^T R')
+    st.latex(r'\sigma_p^2 = w^T \Sigma w')
+    st.code("""def get_portfolio_performance(weights, annual_returns, annual_cov_matrix, risk_free_rate):
+    returns = np.sum(weights * annual_returns)
+    volatility = np.sqrt(np.dot(weights.T, np.dot(annual_cov_matrix, weights)))
+    sharpe = (returns - risk_free_rate) / volatility
+    return returns, volatility, sharpe""")
+
+    st.subheader("5. Sharpe Ratio")
+    st.markdown("The Sharpe Ratio measures the risk-adjusted return of a portfolio.")
+    st.latex(r'\text{Sharpe Ratio} = \frac{E(R_p) - R_f}{\sigma_p}')
+    st.code("sharpe = (returns - risk_free_rate) / volatility")
+
+    st.subheader("6. Optimization")
+    st.markdown("We use `scipy.optimize.minimize` to find the portfolio with the maximum Sharpe ratio.")
+    st.code("""def neg_sharpe_ratio(weights, annual_returns, annual_cov_matrix, risk_free_rate):
+    return -get_portfolio_performance(weights, annual_returns, annual_cov_matrix, risk_free_rate)[2]
+
+args = (annual_returns, annual_cov_matrix, risk_free_rate)
+constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
+bounds = tuple((0, 1) for asset in range(num_assets))
+initial_weights = num_assets * [1. / num_assets]
+
+max_sharpe_portfolio = minimize(neg_sharpe_ratio, initial_weights, args=args,
+                                method='SLSQP', bounds=bounds, constraints=constraints)""")
 
 def mpt_analysis_page():
     st.header("Modern Portfolio Theory Analysis")
@@ -142,6 +203,7 @@ def mpt_analysis_page():
 
     # --- Data Fetching ---
     all_stock_data = get_stock_data(selected_stocks, start_date, end_date)
+    st.session_state.all_stock_data = all_stock_data # Store in session state
 
     # --- Tabs ---
     tab1, tab2, tab3 = st.tabs(["Data & Plotting", "Returns & Covariance", "Efficient Frontier"])
@@ -210,12 +272,12 @@ def mpt_analysis_page():
 
                 # --- Max Sharpe Ratio Portfolio ---
                 args = (annual_returns, annual_cov_matrix, risk_free_rate)
-                constraints = ({"type": "eq", "fun": lambda x: np.sum(x) - 1})
+                constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1})
                 bounds = tuple((0, 1) for asset in range(num_assets))
                 initial_weights = num_assets * [1. / num_assets]
 
                 max_sharpe_portfolio = minimize(neg_sharpe_ratio, initial_weights, args=args,
-                                                method="SLSQP", bounds=bounds, constraints=constraints)
+                                                method='SLSQP', bounds=bounds, constraints=constraints)
 
                 optimal_weights = max_sharpe_portfolio.x
                 optimal_return, optimal_volatility, optimal_sharpe = get_portfolio_performance(
@@ -229,19 +291,19 @@ def mpt_analysis_page():
 
                 st.subheader("Optimal Portfolio Weights:")
                 optimal_weights_df = pd.DataFrame({
-                    "Asset": all_stock_data.columns,
-                    "Weight": optimal_weights
-                }).set_index("Asset")
+                    'Asset': all_stock_data.columns,
+                    'Weight': optimal_weights
+                }).set_index('Asset')
                 
                 col1, col2 = st.columns(2)
 
                 with col1:
-                    st.dataframe(optimal_weights_df.style.format({"Weight": "{:.2%}"}))
+                    st.dataframe(optimal_weights_df.style.format({'Weight': '{:.2%}'}))
 
                 with col2:
                     fig, ax = plt.subplots()
                     ax.pie(optimal_weights, labels=optimal_weights_df.index, autopct="%1.1f%%", startangle=90)
-                    ax.axis("equal")  # Equal aspect ratio ensures that pie is drawn as a circle.
+                    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
                     st.pyplot(fig)
 
                 # --- Efficient Frontier Envelope ---
@@ -250,11 +312,11 @@ def mpt_analysis_page():
                 frontier_volatilities = []
 
                 for ret in frontier_returns:
-                    constraints = ({"type": "eq", "fun": lambda x: np.sum(x) - 1},
-                                   ({"type": "eq", "fun": lambda x: get_portfolio_performance(x, annual_returns, annual_cov_matrix, risk_free_rate)[0] - ret}))
+                    constraints = ({'type': 'eq', 'fun': lambda x: np.sum(x) - 1},
+                                   ({'type': 'eq', 'fun': lambda x: get_portfolio_performance(x, annual_returns, annual_cov_matrix, risk_free_rate)[0] - ret}))
                     result = minimize(get_portfolio_volatility, initial_weights, args=(annual_cov_matrix,),
-                                      method="SLSQP", bounds=bounds, constraints=constraints)
-                    frontier_volatilities.append(result["fun"])
+                                      method='SLSQP', bounds=bounds, constraints=constraints)
+                    frontier_volatilities.append(result['fun'])
 
                 # --- Plotting ---
                 fig, ax = plt.subplots(figsize=(10, 6))
@@ -300,7 +362,7 @@ def code_page():
 st.sidebar.title("Navigation")
 page_selection = st.sidebar.radio(
     "Go to",
-    ("Introduction to MPT", "Mathematical Foundation", "MPT Analysis", "Code")
+    ("Introduction to MPT", "Mathematical Foundation", "MPT Analysis", "Step-by-Step Guide", "Code")
 )
 
 # --- Function Definitions ---
@@ -326,5 +388,7 @@ elif page_selection == "MPT Analysis":
     mpt_analysis_page()
 elif page_selection == "Mathematical Foundation":
     math_foundation_page()
+elif page_selection == "Step-by-Step Guide":
+    step_by_step_page()
 elif page_selection == "Code":
     code_page()
