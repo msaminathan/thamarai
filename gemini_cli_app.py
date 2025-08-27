@@ -343,7 +343,7 @@ def code_page():
 
     # Read the content of the current app.py file
     try:
-        with open("app.py", "r") as f:
+        with open("gemini_cli_app.py", "r") as f:
             code_content = f.read()
         st.code(code_content, language="python")
 
