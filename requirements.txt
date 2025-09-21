@@ -9,3 +9,4 @@ datetime
 seaborn
 yfinance
 scikit-learn
+tinyec
