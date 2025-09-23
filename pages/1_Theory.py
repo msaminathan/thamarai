@@ -10,7 +10,7 @@ st.title("📜 The Theory Behind ECC")
 
 st.header("1. The Elliptic Curve Equation")
 st.write(
-    "An elliptic curve is not an ellipse. It's a specific type of curve defined by the equation:"
+    "An elliptic curve is a specific type of curve defined by the equation:"
 )
 st.latex(r"y^2 = x^3 + ax + b")
 
@@ -28,12 +28,10 @@ a_plot = -1
 b_plot = 1
 x_vals = np.linspace(-1.5, 3.5, 400)
 y_squared = x_vals**3 + a_plot * x_vals + b_plot
-
-# Handle negative values where y^2 is not real
 y_vals = np.sqrt(np.clip(y_squared, 0, None))
 
 fig, ax = plt.subplots(figsize=(6, 6))
-ax.plot(x_vals, y_vals, color='red', linewidth=2)
+ax.plot(x_vals, y_vals, color='red', linewidth=2, label='Curve')
 ax.plot(x_vals, -y_vals, color='red', linewidth=2)
 ax.axvline(0, color='gray', linestyle='--')
 ax.axhline(0, color='gray', linestyle='--')
@@ -41,6 +39,52 @@ ax.set_title(f"Continuous Curve: $y^2 = x^3 - 1x + 1$")
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.grid(True)
+ax.legend()
+st.pyplot(fig)
+
+st.subheader("Visualizing Point Addition on a Continuous Curve")
+st.write(
+    "The core operation in ECC is **point addition**. Given two points $P$ and $Q$ on the curve, "
+    "we can find a third point $R = P+Q$ using simple geometric rules:"
+)
+st.markdown(
+    """
+    1.  Draw a straight line through points $P$ and $Q$.
+    2.  This line will intersect the curve at a third point, let's call it $-R$.
+    3.  Reflect $-R$ across the x-axis to find the point $R$.
+    """
+)
+
+# Choose points for the continuous plot
+P_x, P_y = 1, np.sqrt(1**3 + a_plot*1 + b_plot)
+Q_x, Q_y = 3, np.sqrt(3**3 + a_plot*3 + b_plot)
+
+# Calculate the slope and the new point coordinates for P+Q
+m = (Q_y - P_y) / (Q_x - P_x)
+R_x = m**2 - P_x - Q_x
+R_y = m * (P_x - R_x) - P_y
+
+fig, ax = plt.subplots(figsize=(6, 6))
+ax.plot(x_vals, y_vals, color='red', linewidth=2)
+ax.plot(x_vals, -y_vals, color='red', linewidth=2)
+
+# Plot the points and the line
+ax.plot(P_x, P_y, 'ro', markersize=8, label='P')
+ax.plot(Q_x, Q_y, 'go', markersize=8, label='Q')
+ax.plot(R_x, -R_y, 'bo', markersize=8, label='-R') # The third intersection point
+ax.plot(R_x, R_y, 'yo', markersize=8, label='P+Q')
+
+# Draw the lines
+line_x = np.linspace(-1, 4, 100)
+line_y = m * (line_x - P_x) + P_y
+ax.plot(line_x, line_y, 'k--', label='Line through P and Q')
+ax.axvline(R_x, color='gray', linestyle=':')
+
+ax.set_title("Point Addition on Continuous Curve")
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.grid(True)
+ax.legend()
 st.pyplot(fig)
 
 st.markdown("---")
