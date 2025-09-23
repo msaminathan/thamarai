@@ -98,9 +98,9 @@ st.write(
 
 # Define a small, illustrative curve
 p = 13  # A prime number
-a = 1
+a = -1  # Corrected to match the continuous plot
 b = 1
-st.write(f"Using the curve $y^2 \\equiv x^3 + {a}x + {b} \\pmod{{{p}}}$")
+st.write(f"Using the curve $y^2 \\equiv x^3 - 1x + 1 \\pmod{{{p}}}$")
 
 # Find all points on the curve
 points = []
@@ -151,7 +151,7 @@ st.write(
 )
 
 st.subheader("Example: Point Addition on the Plot")
-st.write("Let's add two points from our curve: $P = (1, 1)$ and $Q = (3, 7)$.")
+st.write("Let's add two points from our curve: $P = (1, 1)$ and $Q = (4, 3)$.")
 
 # Find modular inverse function
 def mod_inverse(n, p):
@@ -166,35 +166,34 @@ st.write("### Calculation Steps")
 st.markdown("**Step 1: Calculate the slope $m$**")
 st.code(
     """
-y_Q - y_P = 7 - 1 = 6
-x_Q - x_P = 3 - 1 = 2
-mod_inverse(2, 13) = 7  (since 2 * 7 = 14 = 1 mod 13)
-m = 6 * 7 = 42
-m mod 13 = 3
+y_Q - y_P = 3 - 1 = 2
+x_Q - x_P = 4 - 1 = 3
+mod_inverse(3, 13) = 9  (since 3 * 9 = 27 = 1 mod 13)
+m = (2 * 9) mod 13 = 18 mod 13 = 5
 """, language="text"
 )
-m = 3
+m = 5
 
 st.markdown("**Step 2: Calculate the x-coordinate of the result**")
 st.code(
     """
 x_R = m^2 - x_P - x_Q
-x_R = 3^2 - 1 - 3 = 9 - 4 = 5
-x_R mod 13 = 5
+x_R = 5^2 - 1 - 4 = 25 - 5 = 20
+x_R mod 13 = 7
 """, language="text"
 )
-x_R = 5
+x_R = 7
 
 st.markdown("**Step 3: Calculate the y-coordinate of the result**")
 st.code(
     """
 y_R = m * (x_P - x_R) - y_P
-y_R = 3 * (1 - 5) - 1
-y_R = 3 * (-4) - 1 = -12 - 1 = -13
-y_R mod 13 = 0
+y_R = 5 * (1 - 7) - 1
+y_R = 5 * (-6) - 1 = -30 - 1 = -31
+y_R mod 13 = 8
 """, language="text"
 )
-y_R = 0
+y_R = 8
 
 st.write(f"The resulting point is **$R = P+Q = ({x_R}, {y_R})$**.")
 
@@ -203,10 +202,10 @@ fig, ax = plt.subplots(figsize=(6, 6))
 x_coords = [p[0] for p in points]
 y_coords = [p[1] for p in points]
 ax.plot(x_coords, y_coords, 'o', markersize=10, color='blue', label='Points on the Curve')
-ax.plot([1, 3, 5], [1, 7, 0], 'o', markersize=12)
+ax.plot([1, 4, 7], [1, 3, 8], 'o', markersize=12)
 ax.plot(1, 1, 'go', markersize=12, label='P')
-ax.plot(3, 7, 'ro', markersize=12, label='Q')
-ax.plot(5, 0, 'yo', markersize=12, label='P+Q')
+ax.plot(4, 3, 'ro', markersize=12, label='Q')
+ax.plot(7, 8, 'yo', markersize=12, label='P+Q')
 ax.set_title(f"Point Addition on $GF({p})$")
 ax.set_xlabel(f"x (mod {p})")
 ax.set_ylabel(f"y (mod {p})")
