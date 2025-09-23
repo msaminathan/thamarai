@@ -15,13 +15,42 @@ st.write(
 st.latex(r"y^2 = x^3 + ax + b")
 
 st.write(
+    "Its non-singular form is a key requirement for cryptography, as it ensures the curve has no sharp corners or self-intersections."
+)
+
+st.subheader("Continuous Plot of an Elliptic Curve")
+st.write(
+    "This plot shows the continuous, mathematical form of the curve before it is used in cryptography over a finite field."
+)
+
+# Define the curve parameters for the plot
+a_plot = -1
+b_plot = 1
+x_vals = np.linspace(-1.5, 3.5, 400)
+y_squared = x_vals**3 + a_plot * x_vals + b_plot
+
+# Handle negative values where y^2 is not real
+y_vals = np.sqrt(np.clip(y_squared, 0, None))
+
+fig, ax = plt.subplots(figsize=(6, 6))
+ax.plot(x_vals, y_vals, color='red', linewidth=2)
+ax.plot(x_vals, -y_vals, color='red', linewidth=2)
+ax.axvline(0, color='gray', linestyle='--')
+ax.axhline(0, color='gray', linestyle='--')
+ax.set_title(f"Continuous Curve: $y^2 = x^3 - 1x + 1$")
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.grid(True)
+st.pyplot(fig)
+
+st.markdown("---")
+
+st.header("2. Point Addition over a Finite Field")
+st.write(
     "In cryptography, we use these curves over a **finite field**, which means all the points have "
     "integer coordinates, and all calculations are performed modulo a large prime number $p$. "
     "This transforms the smooth curve into a scatter plot of discrete points."
 )
-
-st.header("2. Point Addition over a Finite Field")
-st.write("Let's visualize an elliptic curve over a small finite field, and then perform point addition.")
 
 # Define a small, illustrative curve
 p = 13  # A prime number
